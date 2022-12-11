@@ -10,10 +10,12 @@ var dimensionRouter = require('./routes/dimensionResult');
 var dotenv = require('dotenv')
 
 var app = express();
+var cors = require('cors')
 
 // dotenv
 dotenv.config();
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

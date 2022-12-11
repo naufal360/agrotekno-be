@@ -1,20 +1,24 @@
 const Validator = require('fastest-validator');
 const httpStatus = require("http-status");
 const Response = require("../util/responses");
-const {DimensionResult} = require("../models");
+const {dimensionResult} = require("../models");
 const validatorSchema = require("../util/validator");
 const predictEconomic = require("../util/fuzzyis/economicDimension");
 const predictEnvironment = require("../util/fuzzyis/environmentDimension");
 const predictSocial = require("../util/fuzzyis/socialDimension");
 const GenerateStatus = require("../util/constantPredict");
-
 const v = new Validator()
 
 // GET
 const getAllDataDimension = async (req, res) => {
     let response = null
     try {
-        
+        const data = await dimensionResult.findAll();
+
+        let msg = "Success get all dimension"
+
+        response = new Response.Success(false, msg, data);
+        return res.status(httpStatus.OK).json(response);
     } catch (error) {
         response = new Response.Error(true, error.message);
         return res.status(httpStatus.BAD_REQUEST).json(response);
@@ -42,8 +46,8 @@ const predictDimensionEconomic = async (req, res) => {
         status = GenerateStatus.generateStatus(result)
         const name = "EKONOMI"
 
-        const data = await DimensionResult.create({
-            user_id: req.body.user_id,
+        const data = await dimensionResult.create({
+            userId: req.body.user_id,
             name: name,
             grade: result,
             status: status
@@ -82,8 +86,8 @@ const predictDimensionSocial = async (req, res) => {
         status = GenerateStatus.generateStatus(result)
         const name = "SOSIAL"
 
-        const data = await DimensionResult.create({
-            user_id: req.body.user_id,
+        const data = await dimensionResult.create({
+            userId: req.body.user_id,
             name: name,
             grade: result,
             status: status
@@ -125,8 +129,8 @@ const predictDimensionEnvironment = async (req, res) => {
         console.log(result)
         console.log(status)
 
-        const data = await DimensionResult.create({
-            user_id: req.body.user_id,
+        const data = await dimensionResult.create({
+            userId: req.body.user_id,
             name: name,
             grade: result,
             status: status
@@ -144,4 +148,9 @@ const predictDimensionEnvironment = async (req, res) => {
 }
 
 
-module.exports = {predictDimensionEconomic, predictDimensionSocial, predictDimensionEnvironment}
+module.exports = {
+    predictDimensionEconomic, 
+    predictDimensionSocial, 
+    predictDimensionEnvironment,
+    getAllDataDimension,
+}

@@ -25,4 +25,15 @@ const validatorSocialSchema = {
     partner_inc: "number"
 }
 
-module.exports = {validatorEconomicSchema, validatorEnvironmentSchema, validatorSocialSchema}
+const usersSchema = {
+    username: "string|min:4",
+    password: "string|min5",
+    roles: "string"
+}
+
+const usersLoginSchema = {
+    username: "string|min:4",
+    password: "string|min5"
+}
+
+module.exports = {validatorEconomicSchema, validatorEnvironmentSchema, validatorSocialSchema, usersSchema, usersLoginSchema}
