@@ -12,5 +12,13 @@ class Success {
     this.data = data;
   }
 }
+class SuccessCustomDimension {
+  constructor(error, message, total, data) {
+    this.error = error;
+    this.message = message;
+    this.total = total;
+    this.data = data;
+  }
+}
 
-module.exports = { Error, Success };
+module.exports = { Error, Success, SuccessCustomDimension };

@@ -6,7 +6,7 @@ const validatorSchema = require("../util/validator");
 const predictEconomic = require("../util/fuzzyis/economicDimension");
 const predictEnvironment = require("../util/fuzzyis/environmentDimension");
 const predictSocial = require("../util/fuzzyis/socialDimension");
-const GenerateStatus = require("../util/constantPredict");
+const GenerateStatus = require("../util/constant");
 const v = new Validator()
 
 // GET

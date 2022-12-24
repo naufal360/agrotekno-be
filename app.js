@@ -5,7 +5,9 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var dimensionRouter = require('./routes/dimensionResult');
+var dimensionRouterDeprecated = require('./routes/dimensionResult');
+var dimensionRouter = require('./routes/dimensions');
+var socialecoenvRouter = require('./routes/socialecoenvs');
 
 var dotenv = require('dotenv')
 
@@ -23,7 +25,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/dimension', dimensionRouter);
+app.use('/users', usersRouter, dimensionRouter, socialecoenvRouter);
+// app.use('/dimension', );
+app.use('/dimensionold', dimensionRouterDeprecated);
 
 module.exports = app;

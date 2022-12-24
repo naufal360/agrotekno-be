@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class dimensionResult extends Model {
+  class DataDimension extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,16 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DataDimension.belongsTo(models.Users, { foreignKey: 'userId' })
+      // DataDimension.hasMany(models.SocialEcoEnv, { foreignKey: 'dataDimensionId' })
     }
   }
-  dimensionResult.init({
-    userId: DataTypes.INTEGER,
-    name: DataTypes.ENUM("EKONOMI", "SOSIAL", "LINGKUNGAN"),
+  DataDimension.init({
+    // idCode: DataTypes.STRING,
+    name: DataTypes.STRING,
     grade: DataTypes.INTEGER,
-    status: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'dimensionResult',
+    modelName: 'DataDimension',
   });
-  return dimensionResult;
+  return DataDimension;
 };
