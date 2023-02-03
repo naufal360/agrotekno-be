@@ -123,9 +123,9 @@ const predictDimensionSocial = async (req, res) => {
                 return res.status(httpStatus.BAD_REQUEST).json(response);
             }
         } else {
-            let newCode = countSameDimensionId.codeId
+            let newCode = countSameDimensionId.code
             codeString = newCode.substring(3,6)
-            codeNumber = Number(codeString)
+            numberCode = Number(codeString)
             code = prefixData.prefix + codeString
         }
 
@@ -544,7 +544,6 @@ const updateSocial = async (req, res) => {
                 plain: true,
             }
         )
-        
         const findData = await SocialEcoEnvs.findOne({
             where: {
                 dataDimensionId: id,
@@ -590,7 +589,7 @@ const updateSocial = async (req, res) => {
             grade: inputResult,
         },{
             where: {
-                id: dimension_id,
+                id: id,
             }
         })
 
@@ -697,11 +696,9 @@ const updateEconomic = async (req, res) => {
             grade: inputResult,
         },{
             where: {
-                id: dimension_id,
+                id: id,
             }
         })
-
-        msg = "Success update predict economic"
 
         response = new Response.Success(false, msg, findData);
         return res.status(httpStatus.OK).json(response);
@@ -741,7 +738,7 @@ const updateEnvironment = async (req, res) => {
                 waste_manage,
             )
 
-            await SocialEcoEnvs.update(
+            let a = await SocialEcoEnvs.update(
                 {
                     firstIndicator: emission,
                     secondIndicator: water_con,
@@ -758,7 +755,7 @@ const updateEnvironment = async (req, res) => {
                     plain: true,
                 }
             )
-            
+
             const findData = await SocialEcoEnvs.findOne({
                 where: {
                     dataDimensionId: id,
@@ -804,7 +801,7 @@ const updateEnvironment = async (req, res) => {
             grade: inputResult,
         },{
             where: {
-                id: dimension_id,
+                id: id,
             }
         })
 
@@ -962,6 +959,229 @@ const getDetailEnvironmentById = async (req, res) => {
     }
 }
 
+const deleteSocial = async (req, res) => {
+    let response = null
+    let msg = null
+    try {
+        const id = req.params['id']
+        const prefixid = 1
+
+        const findData = await SocialEcoEnvs.findOne({
+            where: {
+                dataDimensionId: id,
+                prefixId: prefixid,
+            }
+        })
+
+        if(!findData) {
+            msg = "data not found"
+            response = new Response.Error(true, msg)
+            return res.status(httpStatus.BAD_REQUEST).json(response) 
+        }
+
+        const deleteData = await SocialEcoEnvs.destroy({
+            where: {
+                dataDimensionId: id,
+                prefixId: prefixid,
+            },
+            force: true,
+        })
+        
+        const dataSocEcoEnv = await SocialEcoEnvs.findAll({
+            where: {
+                codeId: findData.codeId,
+            },
+            order: [
+                ['prefixId', 'DESC']
+            ]
+        })
+
+        let gradeSocial = 0
+        let gradeEconomic = 0
+        let gradeEnvironment = 0
+        let inputResult = 0
+
+        if (dataSocEcoEnv.length === 1) {
+            gradeSocial = dataSocEcoEnv[0].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        } else if (dataSocEcoEnv.length === 2) {
+            gradeSocial = dataSocEcoEnv[0].grade
+            gradeEconomic = dataSocEcoEnv[1].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        } else {
+            gradeSocial = dataSocEcoEnv[0].grade
+            gradeEconomic = dataSocEcoEnv[1].grade
+            gradeEnvironment = dataSocEcoEnv[2].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        }
+
+        await DataDimension.update({
+            grade: inputResult,
+        },{
+            where: {
+                id: id,
+            }
+        })
+
+        msg = "Success delete social"
+
+        response = new Response.Success(false, msg, deleteData)
+        return res.status(httpStatus.OK).json(response)
+    } catch (error) {
+        response = new Response.Error(true, error.message);
+        return res.status(httpStatus.BAD_REQUEST).json(response);
+    }
+}
+
+const deleteEconomic = async (req, res) => {
+    let response = null
+    let msg = null
+    try {
+        const id = req.params['id']
+        const prefixid = 2
+
+        const findData = await SocialEcoEnvs.findOne({
+            where: {
+                dataDimensionId: id,
+                prefixId: prefixid,
+            }
+        })
+
+        if(!findData) {
+            msg = "data not found"
+            response = new Response.Error(true, msg)
+            return res.status(httpStatus.BAD_REQUEST).json(response) 
+        }
+
+        const deleteData = await SocialEcoEnvs.destroy({
+            where: {
+                dataDimensionId: id,
+                prefixId: prefixid,
+            },
+            force: true,
+        })
+        
+        const dataSocEcoEnv = await SocialEcoEnvs.findAll({
+            where: {
+                codeId: findData.codeId,
+            },
+            order: [
+                ['prefixId', 'DESC']
+            ]
+        })
+
+        let gradeSocial = 0
+        let gradeEconomic = 0
+        let gradeEnvironment = 0
+        let inputResult = 0
+
+        if (dataSocEcoEnv.length === 1) {
+            gradeSocial = dataSocEcoEnv[0].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        } else if (dataSocEcoEnv.length === 2) {
+            gradeSocial = dataSocEcoEnv[0].grade
+            gradeEconomic = dataSocEcoEnv[1].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        } else {
+            gradeSocial = dataSocEcoEnv[0].grade
+            gradeEconomic = dataSocEcoEnv[1].grade
+            gradeEnvironment = dataSocEcoEnv[2].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        }
+
+        await DataDimension.update({
+            grade: inputResult,
+        },{
+            where: {
+                id: id,
+            }
+        })
+
+        msg = "Success delete economic"
+
+        response = new Response.Success(false, msg, deleteData)
+        return res.status(httpStatus.OK).json(response)
+    } catch (error) {
+        response = new Response.Error(true, error.message);
+        return res.status(httpStatus.BAD_REQUEST).json(response);
+    }
+}
+
+
+const deleteEnvironment = async (req, res) => {
+    let response = null
+    let msg = null
+    try {
+        const id = req.params['id']
+        const prefixid = 3
+
+        const findData = await SocialEcoEnvs.findOne({
+            where: {
+                dataDimensionId: id,
+                prefixId: prefixid,
+            }
+        })
+
+        if(!findData) {
+            msg = "data not found"
+            response = new Response.Error(true, msg)
+            return res.status(httpStatus.BAD_REQUEST).json(response) 
+        }
+
+        const deleteData = await SocialEcoEnvs.destroy({
+            where: {
+                dataDimensionId: id,
+                prefixId: prefixid,
+            },
+            force: true,
+        })
+        
+        const dataSocEcoEnv = await SocialEcoEnvs.findAll({
+            where: {
+                codeId: findData.codeId,
+            },
+            order: [
+                ['prefixId', 'DESC']
+            ]
+        })
+
+        let gradeSocial = 0
+        let gradeEconomic = 0
+        let gradeEnvironment = 0
+        let inputResult = 0
+
+        if (dataSocEcoEnv.length === 1) {
+            gradeSocial = dataSocEcoEnv[0].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        } else if (dataSocEcoEnv.length === 2) {
+            gradeSocial = dataSocEcoEnv[0].grade
+            gradeEconomic = dataSocEcoEnv[1].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        } else {
+            gradeSocial = dataSocEcoEnv[0].grade
+            gradeEconomic = dataSocEcoEnv[1].grade
+            gradeEnvironment = dataSocEcoEnv[2].grade
+            inputResult = (gradeSocial+gradeEconomic+gradeEnvironment)/3
+        }
+
+        await DataDimension.update({
+            grade: inputResult,
+        },{
+            where: {
+                id: id,
+            }
+        })
+
+        msg = "Success delete environment"
+
+        response = new Response.Success(false, msg, deleteData)
+        return res.status(httpStatus.OK).json(response)
+    } catch (error) {
+        response = new Response.Error(true, error.message);
+        return res.status(httpStatus.BAD_REQUEST).json(response);
+    }
+}
+
 module.exports = {
     predictDimensionSocial,
     predictDimensionEconomic,
@@ -973,4 +1193,7 @@ module.exports = {
     getDetailSocialById,
     getDetailEconomicById,
     getDetailEnvironmentById,
+    deleteSocial,
+    deleteEconomic,
+    deleteEnvironment
 }
