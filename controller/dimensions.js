@@ -98,7 +98,79 @@ const CreateDimension = async (req, res) => {
     }
 }
 
+const DeleteDataDimension = async(req, res) => {
+    let response = null
+    let msg = null
+    try {
+        const id = req.params['id']
+
+        const data = await DataDimension.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        if (data.grade != 0) {
+            let prefixSoc=1
+            let prefixEco=2
+            let prefixEnv=3
+
+            // deleteDataSocial
+            await SocialEcoEnvs.destroy({
+            where: {
+                    dataDimensionId: id,
+                    prefixId: prefixSoc,
+                },
+                force: true,
+            })
+
+            // deleteDataEconomic
+            await SocialEcoEnvs.destroy({
+            where: {
+                    dataDimensionId: id,
+                    prefixId: prefixEco,
+                },
+                force: true,
+            })
+            
+            // deleteDataEnvironment
+            await SocialEcoEnvs.destroy({
+            where: {
+                    dataDimensionId: id,
+                    prefixId: prefixEnv,
+                },
+                force: true,
+            })
+
+            // Update grade dimension 
+            await DataDimension.update({
+            grade: 0,
+            },{
+                where: {
+                    id: id,
+                }
+            })
+        }
+
+        // delete data dimension
+        const dataDeleted = await DataDimension.destroy({
+            where: {
+                id: id,
+            }
+        })
+
+        msg = "success delete dimension data"
+        
+        response = new Response.Success(false, msg, dataDeleted);
+        return res.status(httpStatus.OK).json(response);
+    } catch (error) {
+        response = new Response.Error(true, error.message);
+        return res.status(httpStatus.BAD_REQUEST).json(response);
+    }
+}
+
 module.exports = {
     CreateDimension,
     getAllDataDimensionByUserId,
+    DeleteDataDimension,
 }
