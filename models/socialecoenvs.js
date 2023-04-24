@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     thirdIndicator: DataTypes.FLOAT,
     fourthIndicator: DataTypes.FLOAT,
     fifthIndicator: DataTypes.FLOAT,
-    grade: DataTypes.INTEGER
+    grade: DataTypes.FLOAT,
+    status: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'SocialEcoEnvs',

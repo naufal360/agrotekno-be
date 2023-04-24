@@ -98,4 +98,39 @@ const theDate = (dates) => {
     return result
 }
 
-module.exports = { generateStatus, theDate }
+const kesimpulan = (dimension) => {
+    let typeCode = null
+
+    switch (dimension.prefixId) {
+        case 1:
+            typeCode = "sosial"
+            break;
+        case 2:
+            typeCode = "ekonomi"
+            break;
+        case 3:
+            typeCode = "lingkungan"
+            break;
+        default:
+            break;
+    }
+
+    let text1 = `Dari data yang dimasukkan pada dimensi ${typeCode} ini mendapatkan nilai ${dimension.grade} yang berarti nilai keberlanjutan indikator ${typeCode} ini ${dimension.status}.`;
+    let text2 = `Untuk indikator kunci pada industri sekala besar terdapat pada E2, E4 dan E5.`; 
+    let text3 = `Untuk indikator kunci pada industri skala kecil terdapat pada E1, E4 dan E5.`;
+
+    const result = [text1, text2, text3];
+
+    return result;
+}
+
+const saran = () => {
+    let text1 = `Untuk indikator kunci pada industri sekala besar terdapat pada E2, E4 dan E5.`; 
+    let text2 = `Untuk indikator kunci pada industri skala kecil terdapat pada E1, E4 dan E5.`;
+
+    const result = [text1, text2];
+
+    return result;
+}
+
+module.exports = { generateStatus, theDate, kesimpulan, saran }

@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   DataDimension.init({
     // idCode: DataTypes.STRING,
     name: DataTypes.STRING,
-    grade: DataTypes.INTEGER,
+    grade: DataTypes.FLOAT,
   }, {
     sequelize,
     modelName: 'DataDimension',

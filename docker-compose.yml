@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  sql-dss:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=agrotekno_db
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysql", "-u", "root", "-p", "-e", "show schemas"]
+      interval: 10s
+  docker-dss-project:
+    image: naufal360/agrotekno-be
+    environment:
+      - DB_USERNAME_PROD=root
+      - DB_PASSWORD_PROD=
+      - DB_HOSTNAME_PROD=172.17.0.1
+      - DB_NAME_PROD=agrotekno_db
+      - DB_DIALECT_PROD=mysql
+    restart: on-failure
+    depends_on:
+      sql-dss:
+        condition: service_healthy

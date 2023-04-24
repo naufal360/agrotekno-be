@@ -6,9 +6,10 @@ const validatorSchema = require("../util/validator");
 const predictEconomic = require("../util/fuzzyis/economicDimension");
 const predictEnvironment = require("../util/fuzzyis/environmentDimension");
 const predictSocial = require("../util/fuzzyis/socialDimension");
+const predict = require("../util/predict")
 const GenerateStatus = require("../util/constant");
 const sequelize = require('sequelize');
-const { theDate } = require('../util/constant');
+const { theDate, kesimpulan, saran } = require('../util/constant');
 const v = new Validator()
 
 const socialPrefix = 1
@@ -62,13 +63,15 @@ const predictDimensionSocial = async (req, res) => {
             partner_inc
         } = req.body
 
-        result = predictSocial(
+        const theRes = await predict.predictSomething(
+            0,
             institutional_sup, 
             local_emp, 
             infra_avail, 
             employee_welf, 
             partner_inc
         )
+        result = theRes['result']
 
         const prefixData = await PrefixCode.findOne({
             where: {
@@ -130,7 +133,6 @@ const predictDimensionSocial = async (req, res) => {
         }
 
         status = GenerateStatus.generateStatus(result)
-        console.log(status)
 
         const data = await SocialEcoEnvs.create({
             prefixId: socialPrefix,
@@ -143,6 +145,7 @@ const predictDimensionSocial = async (req, res) => {
             fourthIndicator: employee_welf,
             fifthIndicator: partner_inc,
             grade: result,
+            status: status,
         })
 
         const dataSocEcoEnv = await SocialEcoEnvs.findAll({
@@ -215,13 +218,15 @@ const predictDimensionEconomic = async (req, res) => {
             market_acc
         } = req.body
 
-        result = predictEconomic(
+        const theRes = await predict.predictSomething(
+            1,
             risk, 
             profit_dif, 
             supply, 
             demand_inc, 
             market_acc
         )
+        result = theRes['result']
 
         const prefixData = await PrefixCode.findOne({
             where: {
@@ -283,7 +288,6 @@ const predictDimensionEconomic = async (req, res) => {
         }
 
         status = GenerateStatus.generateStatus(result)
-        console.log(status)
 
         const data = await SocialEcoEnvs.create({
             prefixId: economicPrefix,
@@ -295,7 +299,8 @@ const predictDimensionEconomic = async (req, res) => {
             thirdIndicator: supply,
             fourthIndicator: demand_inc,
             fifthIndicator: market_acc,
-            grade: result
+            grade: result,
+            status: status,
         })
 
         const dataSocEcoEnv = await SocialEcoEnvs.findAll({
@@ -366,13 +371,15 @@ const predictDimensionEnvironment = async (req, res) => {
             waste_manage,
         } = req.body
 
-        result = predictEnvironment(
+        const theRes = await predict.predictSomething(
+            2,
             emission, 
             water_con, 
             waste_com, 
             waste_util, 
             waste_manage,
         )
+        result = theRes['result']
 
         const prefixData = await PrefixCode.findOne({
             where: {
@@ -434,7 +441,6 @@ const predictDimensionEnvironment = async (req, res) => {
         }
 
         status = GenerateStatus.generateStatus(result)
-        console.log(status)
 
         const data = await SocialEcoEnvs.create({
             prefixId: environmentPrefix,
@@ -446,7 +452,8 @@ const predictDimensionEnvironment = async (req, res) => {
             thirdIndicator: waste_com,
             fourthIndicator: waste_util,
             fifthIndicator: waste_manage,
-            grade: result
+            grade: result,
+            status: status,
         })
 
         const dataSocEcoEnv = await SocialEcoEnvs.findAll({
@@ -519,13 +526,17 @@ const updateSocial = async (req, res) => {
             partner_inc
         } = req.body
 
-        result = predictSocial(
+        const theRes = await predict.predictSomething(
+            0,
             institutional_sup, 
             local_emp, 
             infra_avail, 
             employee_welf, 
             partner_inc
         )
+        result = theRes['result']
+
+        let status = GenerateStatus.generateStatus(result)
 
         await SocialEcoEnvs.update(
             {
@@ -534,7 +545,8 @@ const updateSocial = async (req, res) => {
                 thirdIndicator: infra_avail,
                 fourthIndicator: employee_welf,
                 fifthIndicator: partner_inc,
-                grade: result
+                grade: result,
+                status: status,
             }, {
                 where: {
                     dataDimensionId: id,
@@ -625,13 +637,17 @@ const updateEconomic = async (req, res) => {
                 market_acc
             } = req.body
 
-            result = predictEconomic(
+            const theRes = await predict.predictSomething(
+                1,
                 risk, 
                 profit_dif, 
                 supply, 
                 demand_inc, 
                 market_acc
             )
+            result = theRes['result']
+
+            let status = GenerateStatus.generateStatus(result)
 
             await SocialEcoEnvs.update(
                 {
@@ -640,7 +656,8 @@ const updateEconomic = async (req, res) => {
                     thirdIndicator: supply,
                     fourthIndicator: demand_inc,
                     fifthIndicator: market_acc,
-                    grade: result
+                    grade: result,
+                    status: status,
                 }, {
                     where: {
                         dataDimensionId: id,
@@ -730,13 +747,17 @@ const updateEnvironment = async (req, res) => {
                 waste_manage,
             } = req.body
 
-            result = predictEnvironment(
+            const theRes = await predict.predictSomething(
+                2,
                 emission, 
                 water_con, 
                 waste_com, 
                 waste_util, 
                 waste_manage,
             )
+            result = theRes['result']
+
+            let status = GenerateStatus.generateStatus(result)
 
             let a = await SocialEcoEnvs.update(
                 {
@@ -745,7 +766,8 @@ const updateEnvironment = async (req, res) => {
                     thirdIndicator: waste_com,
                     fourthIndicator: waste_util,
                     fifthIndicator: waste_manage,
-                    grade: result
+                    grade: result,
+                    status: status,
                 }, {
                     where: {
                         dataDimensionId: id,
@@ -831,10 +853,9 @@ const getDetailSocialById = async (req, res) => {
 
         let dateRaw = dataSocialEcoEnv.createdAt.toISOString().replace(/T/, ' ').replace(/\..+/, '')
         let dateParse = theDate(dateRaw.substring(0,10))
-        let status = GenerateStatus.generateStatus(dataSocialEcoEnv.grade)
 
-        let kesimpulan = "baik"
-        let saran = "baik banget"
+        let kesimpulan = GenerateStatus.kesimpulan(dataSocialEcoEnv);
+        let saran = GenerateStatus.status();
 
         const customResponse = {
             id: dataSocialEcoEnv.id,
@@ -847,7 +868,7 @@ const getDetailSocialById = async (req, res) => {
             fourthIndicator: dataSocialEcoEnv.fourthIndicator,
             fifthIndicator: dataSocialEcoEnv.fifthIndicator,
             grade: dataSocialEcoEnv.grade,
-            status: status,
+            status: dataSocialEcoEnv.status,
             kesimpulan: kesimpulan,
             saran: saran,
             createdAt: dateParse,
@@ -879,10 +900,9 @@ const getDetailEconomicById = async (req, res) => {
 
         let dateRaw = dataSocialEcoEnv.createdAt.toISOString().replace(/T/, ' ').replace(/\..+/, '')
         let dateParse = theDate(dateRaw.substring(0,10))
-        let status = GenerateStatus.generateStatus(dataSocialEcoEnv.grade)
 
-        let kesimpulan = "baik"
-        let saran = "baik banget"
+        let kesimpulan = GenerateStatus.kesimpulan(dataSocialEcoEnv);
+        let saran = GenerateStatus.status();
 
         const customResponse = {
             id: dataSocialEcoEnv.id,
@@ -895,7 +915,7 @@ const getDetailEconomicById = async (req, res) => {
             fourthIndicator: dataSocialEcoEnv.fourthIndicator,
             fifthIndicator: dataSocialEcoEnv.fifthIndicator,
             grade: dataSocialEcoEnv.grade,
-            status: status,
+            status: dataSocialEcoEnv.status,
             kesimpulan: kesimpulan,
             saran: saran,
             createdAt: dateParse,
@@ -927,10 +947,9 @@ const getDetailEnvironmentById = async (req, res) => {
 
         let dateRaw = dataSocialEcoEnv.createdAt.toISOString().replace(/T/, ' ').replace(/\..+/, '')
         let dateParse = theDate(dateRaw.substring(0,10))
-        let status = GenerateStatus.generateStatus(dataSocialEcoEnv.grade)
 
-        let kesimpulan = "baik"
-        let saran = "baik banget"
+        let kesimpulan = GenerateStatus.kesimpulan(dataSocialEcoEnv);
+        let saran = GenerateStatus.status();
 
         const customResponse = {
             id: dataSocialEcoEnv.id,
@@ -943,7 +962,7 @@ const getDetailEnvironmentById = async (req, res) => {
             fourthIndicator: dataSocialEcoEnv.fourthIndicator,
             fifthIndicator: dataSocialEcoEnv.fifthIndicator,
             grade: dataSocialEcoEnv.grade,
-            status: status,
+            status: dataSocialEcoEnv.status,
             kesimpulan: kesimpulan,
             saran: saran,
             createdAt: dateParse,

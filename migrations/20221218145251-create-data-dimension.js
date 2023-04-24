@@ -23,7 +23,7 @@ module.exports = {
       },
       grade: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         defaultValue: 0
       },
       createdAt: {

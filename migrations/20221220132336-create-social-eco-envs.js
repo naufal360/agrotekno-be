@@ -49,7 +49,10 @@ module.exports = {
         type: Sequelize.FLOAT
       },
       grade: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
+      },
+      status:{
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

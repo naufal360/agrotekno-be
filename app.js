@@ -5,7 +5,6 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var dimensionRouterDeprecated = require('./routes/dimensionResult');
 var dimensionRouter = require('./routes/dimensions');
 var socialecoenvRouter = require('./routes/socialecoenvs');
 
@@ -26,7 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter, dimensionRouter, socialecoenvRouter);
-// app.use('/dimension', );
-app.use('/dimensionold', dimensionRouterDeprecated);
+
 
 module.exports = app;
