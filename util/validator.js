@@ -4,7 +4,6 @@ const validatorDimension = {
 }
 
 const validatorEconomicSchema = {
-    // dimension_id: "number",
     risk: "number", 
     profit_dif: "number", 
     supply: "number", 
@@ -13,7 +12,6 @@ const validatorEconomicSchema = {
 }
 
 const validatorEnvironmentSchema = {
-    // dimension_id: "number",
     emission: "number", 
     water_con: "number", 
     waste_com: "number", 
@@ -22,7 +20,6 @@ const validatorEnvironmentSchema = {
 }
 
 const validatorSocialSchema = {
-    // dimension_id: "number",
     institutional_sup: "number", 
     local_emp: "number", 
     infra_avail: "number", 

@@ -1,7 +1,11 @@
+require('dotenv').config()
 const axios = require('axios')
 
+
 const predictSomething = async (id, input_one, input_two, input_three, input_four, input_five) => {
-    let res = await axios.post("http://127.0.0.1:8081/predict", {
+    let hostFlask = process.env.HOST_FLASK
+    let url = hostFlask + "/predict"
+    let res = await axios.post(url, {
         id: id,
         input_one: input_one, 
         input_two: input_two, 
