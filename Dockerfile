@@ -5,7 +5,9 @@ WORKDIR /app
 
 COPY package*.json  /app
 COPY package-lock.json* /app
+COPY startup.sh /app
 
+RUN chmod +x startup.sh
 RUN npm install --production
 RUN npm audit fix --force
 
@@ -13,4 +15,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "npm", "run", "start" ]
+ENTRYPOINT [ "./startup.sh" ]

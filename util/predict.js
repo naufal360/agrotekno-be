@@ -4,7 +4,8 @@ const axios = require('axios')
 
 const predictSomething = async (id, input_one, input_two, input_three, input_four, input_five) => {
     let hostFlask = process.env.HOST_FLASK
-    let url = hostFlask + "/predict"
+    let portFlask = process.env.PORT_FLASK
+    let url = hostFlask +":"+portFlask+ "/predict"
     let res = await axios.post(url, {
         id: id,
         input_one: input_one, 

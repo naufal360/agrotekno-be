@@ -1,5 +1,10 @@
 version: '3.9'
 services:
+  flask-helper:
+    image: naufal360/flask-agrotekno-be:latest
+    ports:
+      - "5000:5000"
+    restart: on-failure
   sql-dss:
     image: mysql
     ports:
@@ -12,13 +17,15 @@ services:
       test: ["CMD", "mysql", "-u", "root", "-p", "-e", "show schemas"]
       interval: 10s
   docker-dss-project:
-    image: naufal360/agrotekno-be
+    image: naufal360/agrotekno-be:latest
     environment:
       - DB_USERNAME_PROD=root
       - DB_PASSWORD_PROD=
-      - DB_HOSTNAME_PROD=172.17.0.1
+      - DB_HOSTNAME_PROD=host.docker.internal
       - DB_NAME_PROD=agrotekno_db
       - DB_DIALECT_PROD=mysql
+    ports:
+      - "8080:8080"
     restart: on-failure
     depends_on:
       sql-dss:
