@@ -1,0 +1,12 @@
+kalo edit nodenya aja pake command line:
+1. 'sudo docker-compose stop docker-dss-project'
+2. 'sudo docker rm ...' #remove containernya
+3. 'sudo docker rmi ...' #remove imagenya
+4. 'sudo docker-compose up -d'
+
+kalo ngatur ulang semua sampe ke database:
+1. 'sudo docker-compose down'
+2. 'sudo docker-compose up -d'
+3. 'sudo docker exec -it .... bash' #masuk ke node containernya
+4. 'npx sequelize db:migrate && npx sequelize-cli db:seed:all'
+5. 'exit'
