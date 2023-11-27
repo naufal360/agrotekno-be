@@ -12,13 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       DataDimension.belongsTo(models.Users, { foreignKey: 'userId' })
-      // DataDimension.hasMany(models.SocialEcoEnv, { foreignKey: 'dataDimensionId' })
     }
   }
   DataDimension.init({
     // idCode: DataTypes.STRING,
     name: DataTypes.STRING,
-    grade: DataTypes.FLOAT,
+    gradeWet: DataTypes.FLOAT,
+    gradeDry: DataTypes.FLOAT,
   }, {
     sequelize,
     modelName: 'DataDimension',

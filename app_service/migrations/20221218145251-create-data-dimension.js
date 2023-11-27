@@ -21,7 +21,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      grade: {
+      gradeWet: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+        defaultValue: 0
+      },
+      gradeDry: {
         allowNull: false,
         type: Sequelize.FLOAT,
         defaultValue: 0

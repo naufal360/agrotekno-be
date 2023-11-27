@@ -3,7 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
+var pdfRouter = require('./routes/pdf');
 var usersRouter = require('./routes/users');
 var dimensionRouter = require('./routes/dimensions');
 var socialecoenvRouter = require('./routes/socialecoenvs');
@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/pdf', pdfRouter);
 app.use('/users', usersRouter, dimensionRouter, socialecoenvRouter);
 
 

@@ -39,12 +39,11 @@ const getAllDataDimensionByUserId = async (req, res) => {
                 "name": data[i].name,
                 "date": dateParse,
                 "datesCode": newdate,
-                "grade": data[i].grade,
+                "gradeWet": data[i].gradeWet,
+                "gradeDry": data[i].gradeDry,
                 "socEcoEnv": dataSocialEcoEnv,
             })
         }
-
-        
 
         response = new Response.SuccessCustomDimension(false, msg, lengthData, allData);
         return res.status(httpStatus.OK).json(response);
@@ -111,40 +110,71 @@ const DeleteDataDimension = async(req, res) => {
         });
 
         if (data.grade != 0) {
-            let prefixSoc=1
-            let prefixEco=2
-            let prefixEnv=3
+            let prefixSocWet=1
+            let prefixEcoWet=2
+            let prefixEnvWet=3
+            let prefixSocDry=4
+            let prefixEcoDry=5
+            let prefixEnvDry=6
 
-            // deleteDataSocial
+            // deleteDataSocialWet
             await SocialEcoEnvs.destroy({
             where: {
                     dataDimensionId: id,
-                    prefixId: prefixSoc,
+                    prefixId: prefixSocWet,
                 },
                 force: true,
             })
 
-            // deleteDataEconomic
+            // deleteDataEconomicWet
             await SocialEcoEnvs.destroy({
             where: {
                     dataDimensionId: id,
-                    prefixId: prefixEco,
+                    prefixId: prefixEcoWet,
                 },
                 force: true,
             })
             
-            // deleteDataEnvironment
+            // deleteDataEnvironmentWet
             await SocialEcoEnvs.destroy({
             where: {
                     dataDimensionId: id,
-                    prefixId: prefixEnv,
+                    prefixId: prefixEnvWet,
+                },
+                force: true,
+            })
+            
+            // deleteDataSocialDry
+            await SocialEcoEnvs.destroy({
+            where: {
+                    dataDimensionId: id,
+                    prefixId: prefixSocDry,
+                },
+                force: true,
+            })
+
+            // deleteDataEconomicDry
+            await SocialEcoEnvs.destroy({
+            where: {
+                    dataDimensionId: id,
+                    prefixId: prefixEcoDry,
+                },
+                force: true,
+            })
+            
+            // deleteDataEnvironmentDry
+            await SocialEcoEnvs.destroy({
+            where: {
+                    dataDimensionId: id,
+                    prefixId: prefixEnvDry,
                 },
                 force: true,
             })
 
             // Update grade dimension 
             await DataDimension.update({
-            grade: 0,
+            gradeWet: 0,
+            gradeDry: 0,
             },{
                 where: {
                     id: id,
@@ -158,7 +188,6 @@ const DeleteDataDimension = async(req, res) => {
                 id: id,
             }
         })
-
         msg = "success delete dimension data"
         
         response = new Response.Success(false, msg, dataDeleted);

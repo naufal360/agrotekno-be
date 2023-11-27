@@ -10,17 +10,32 @@ module.exports = {
      */
      await queryInterface.bulkInsert('PrefixCodes', [
       {
-        prefix: 'SOC',
+        prefix: 'SOC-WET',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        prefix: 'ECO',
+        prefix: 'ECO-WET',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        prefix: 'ENV',
+        prefix: 'ENV-WET',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        prefix: 'SOC-DRY',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        prefix: 'ECO-DRY',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        prefix: 'ENV-DRY',
         createdAt: new Date(),
         updatedAt: new Date()
       },
